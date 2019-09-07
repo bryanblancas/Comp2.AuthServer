@@ -33,6 +33,7 @@ app.use('/api/obtenerCertificado',require('./routes/obtenerCertificado'));
 app.use('/api/revocarCertificado',require('./routes/revocarCertificado'));
 app.use('/api/existeUsuario',require('./routes/existeUsuario'));
 app.use('/api/guardarUsuario',require('./routes/guardarUsuario'));
+app.use('/api/Certificado',require('./routes/Certificado'));
 
 
 //Starting the Server
