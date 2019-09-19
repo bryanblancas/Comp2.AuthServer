@@ -29,7 +29,8 @@ app.use(express.static(publicDir));
 
 //Routes
 app.use('/api/Aviso',require('./routes/Aviso'));
-app.use('/api/obtenerCertificado',require('./routes/obtenerCertificado'));
+//app.use('/api/obtenerCertificado',require('./routes/obtenerCertificado'));
+app.use('/api/ObtenerCertificadoUsuario',require('./routes/ObtenerCertificadoUsuario'));
 app.use('/api/revocarCertificado',require('./routes/revocarCertificado'));
 app.use('/api/existeUsuario',require('./routes/existeUsuario'));
 app.use('/api/guardarUsuario',require('./routes/guardarUsuario'));
