@@ -131,7 +131,7 @@ router.post('/', async (req, res) => {
     const {email, password} = req.body;
     if(email && password){
         const existe = await User.find({email: email, password: password});
-        prueba();
+        //prueba();
         if(existe.length > 0){
             res.json({status: 1, certificado: existe[0].certificado});
         }else{
