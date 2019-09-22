@@ -15,7 +15,6 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/', (req, res) => {
-    console.log('Entro');
     res.render('Aviso');
 });
 
