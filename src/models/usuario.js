@@ -14,8 +14,7 @@ const userSchema = new Schema({
     organizacionAbreviado: String,
     dominio: String,
     crt: String,
-    csr: String,
-    privateKey: String
+    csr: String
 });
 
 module.exports = mongoose.model('users',userSchema);
