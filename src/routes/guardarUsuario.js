@@ -8,6 +8,13 @@ const node_openssl = require('node-openssl-cert');
 const openssl = new node_openssl();
 var fs = require('fs');
 
+const opensslNode = require('openssl-nodejs');
+
+/*opensslNode(['req', '-out', 'CSR.csr', '-new', '-newkey', 'rsa:2048', '-nodes', '-keyout', 'privateKey.key'], function (err, buffer) {
+    console.log('-----');
+    console.log(err.toString(), buffer.toString());
+});*/
+
 /*function obtenerCertificado(email,ciudad,estado,localidad,codigoPostal,direccion,organizacionNombre,organizacionAbreviado,dominio) {
         
     var valores = {key: '', csr: '', crt: ''};
@@ -192,7 +199,7 @@ function obtenerCertificadoPrueba(nuevoUsuario, res) {
     
     }
 
-    fs.readFile(path.join(__dirname,'../Certificados/certificadoServidor.key'), function(err, contents) {
+    fs.readFile(path.join(__dirname,'../Certificados/llavePrivada_Servidor.key'), function(err, contents) {
         openssl.importRSAPrivateKey(contents, 'servidorPass', function(err, key, cmd) {
             if(err) {
                 console.log(err);

@@ -68,7 +68,7 @@ function obtenerCertificado(nuevoUsuario, res) {
     
     }
 
-    fs.readFile(path.join(__dirname,'../Certificados/certificadoServidor.key'), function(err, contents) {
+    fs.readFile(path.join(__dirname,'../Certificados/llavePrivada_Servidor.key'), function(err, contents) {
         openssl.importRSAPrivateKey(contents, 'servidorPass', function(err, key, cmd) {
             if(err) {
                 console.log(err);

@@ -9,9 +9,9 @@ const path = require('path');
 //app.set('port', process.env.PORT || 3000);
 //app.set('json spaces', 2);
 var options = {
-    key: fs.readFileSync('src/Certificados/certificadoServidor.key'),
-    cert: fs.readFileSync('src/Certificados/certificadoServidor.crt'),
-    ca: fs.readFileSync('src/Certificados/certificadoServidor.csr')
+    key: fs.readFileSync('src/Certificados/llavePrivada_Servidor.key'),
+    cert: fs.readFileSync('src/Certificados/certificado_Servidor.crt'),
+    ca: fs.readFileSync('src/Certificados/request_Servidor.csr')
 }
 
 //Middlewares
