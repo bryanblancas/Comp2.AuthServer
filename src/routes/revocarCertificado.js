@@ -90,7 +90,7 @@ function obtenerCertificado(nuevoUsuario, res) {
                         //key = key.split('-----END PRIVATE KEY-----')[0];
         
                         nuevoUsuario.crt = crt;
-                        nuevoUsuario.csr = csr;
+                        //nuevoUsuario.csr = csr;
         
                         const existe = await User.find({email: nuevoUsuario.email});
                         if(existe.length == 0){
