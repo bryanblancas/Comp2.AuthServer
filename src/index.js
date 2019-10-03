@@ -34,6 +34,7 @@ app.use('/api/ObtenerCertificadoUsuario',require('./routes/ObtenerCertificadoUsu
 app.use('/api/revocarCertificado',require('./routes/revocarCertificado'));
 app.use('/api/existeUsuario',require('./routes/existeUsuario'));
 app.use('/api/guardarUsuario',require('./routes/guardarUsuario'));
+app.use('/api/verificarCertificado',require('./routes/verificarCertificado'));
 //app.use('/api/Certificado',require('./routes/Certificado'));
 
 

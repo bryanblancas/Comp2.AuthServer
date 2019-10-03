@@ -13,7 +13,7 @@ const userSchema = new Schema({
     organizacionNombre: String,
     organizacionAbreviado: String,
     dominio: String,
-    crt: String
+    path: String
 });
 
 module.exports = mongoose.model('users',userSchema);

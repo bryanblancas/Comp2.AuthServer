@@ -1,6 +1,7 @@
 const {Router} = require('express');
 const router = Router();
 const path = require('path');
+var crypto = require('crypto');
 
 //const certificado = require('../sample.json');
 //console.log(certificado);
@@ -67,42 +68,37 @@ function obtenerCertificado(nuevoUsuario, res) {
         }
     
     }
-
-    fs.readFile(path.join(__dirname,'../Certificados/llavePrivada_Servidor.key'), function(err, contents) {
-        openssl.importRSAPrivateKey(contents, 'servidorPass', function(err, key, cmd) {
+    
+    fs.readFile(path.join(__dirname,'../Certificados/llavePrivada_Servidor.key'), async function(err, contents) {
+        openssl.importRSAPrivateKey(contents, 'servidorPass', async function(err, key, cmd) {
             if(err) {
                 console.log(err);
-            } else {	
-                openssl.generateCSR(csroptions, key, 'servidorPass', async function(err, csr, cmd) {
-                    /*console.log('===== CSR OPENSSL FUNCTION =====');
-                    console.log(csr);
-                    console.log('========================================');*/
-                    
-                    //csroptions.days = 365;
-                    openssl.selfSignCSR(csr, csroptions, key, 'servidorPass', async function(err, crt, cmd) {
-                        /*console.log('===== CRT OPENSSL FUNCTION =====');
-                        console.log(crt);
-                        console.log('========================================');*/
-                    
-                        //Se guarda en Base de datos Key, csr & crt
-        
-                        //key = key.split('-----BEGIN PRIVATE KEY-----')[1];
-                        //key = key.split('-----END PRIVATE KEY-----')[0];
-        
-                        nuevoUsuario.crt = crt;
-                        //nuevoUsuario.csr = csr;
-        
-                        const existe = await User.find({email: nuevoUsuario.email});
-                        if(existe.length == 0){
-                            //No existe usuario
-                            res.json({status:0});
+            } else {
+                //Verificamos el archivo con el certificado del usuario
+                var hash = crypto.createHash('sha256').update(nuevoUsuario.email).digest('hex');
+                var pathUsuario = path.join(__dirname,'../../Usuarios_CRT/'+hash);
+                if (fs.existsSync(pathUsuario)){
+                    fs.readFile(pathUsuario+'/'+hash+'.csr', {encoding: 'utf-8'}, async function(err,csr){
+                        if (!err) {
+                            openssl.selfSignCSR(csr, csroptions, key, 'servidorPass', async function(err, crt, cmd) {
+                                fs.writeFile(pathUsuario+'/'+hash+'.csr', csr, async function (err){
+                                    fs.writeFile(pathUsuario+'/'+hash+'.crt', crt, async function (err) {
+                                        if (err) {
+                                            throw err;
+                                        }else{
+                                            //Existe usuario 
+                                            res.json({status: 1});
+                                        }
+                                    });
+                                });
+                            });  
                         }else{
-                            //Existe usuario
-                            await nuevoUsuario.save();  
-                            res.json({status: 1});
+                            res.json({status:0});
                         }
                     });
-                });
+                }else{
+                    res.json({status:0});
+                }
             }
         });
     });
@@ -115,8 +111,11 @@ router.post('/', async (req, res) => {
         const existe = await User.find({email: email, password: password});
         var nuevoUsuario = new User();
         nuevoUsuario = existe[0];
-        //console.log(nuevoUsuario);;
-        obtenerCertificado(nuevoUsuario, res);
+        if(nuevoUsuario){
+            obtenerCertificado(nuevoUsuario, res);
+        }else{
+            res.json({status:0});
+        }
     }
 });
 

@@ -99,13 +99,16 @@ function obtenerCertificadoPrueba(nuevoUsuario, res) {
                             //console.log(pathUsuario);
                             if (!fs.existsSync(pathUsuario)){
                                 fs.mkdirSync(pathUsuario);
-                                fs.writeFile(pathUsuario+'/'+hash+'.crt', crt, async function (err) {
-                                    if (err) throw err;
-                                    
-                                    nuevoUsuario.crt = pathUsuario+'/'+hash+'.crt';
-                                    await nuevoUsuario.save();  
-                                    res.json({status:1, certificado: nuevoUsuario.certificado, email: nuevoUsuario.email});
-
+                                fs.writeFile(pathUsuario+'/'+hash+'.csr', csr, async function (err){
+                                    fs.writeFile(pathUsuario+'/'+hash+'.crt', crt, async function (err) {
+                                        if (err) {
+                                            throw err;
+                                        }else{
+                                            nuevoUsuario.path = pathUsuario;
+                                            await nuevoUsuario.save();
+                                            res.json({status:1, certificado: nuevoUsuario.certificado, email: nuevoUsuario.email});
+                                        }
+                                    });
                                 });
                             }else{
                                 res.json({status: 0, email: nuevoUsuario.email});
