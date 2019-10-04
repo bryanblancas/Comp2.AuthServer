@@ -4,15 +4,11 @@ const router = Router();
 const path = require('path');
 var crypto = require('crypto');
 
-/*Open SSL CERT*/
 const node_openssl = require('node-openssl-cert');
 const openssl = new node_openssl();
 var fs = require('fs');
 
-//console.log(openssl);
-
 function obtenerCertificadoPrueba(nuevoUsuario, res) {
-    //console.log(nuevoUsuario);
 
     var csroptions = {
         hash: 'sha256',
@@ -74,29 +70,11 @@ function obtenerCertificadoPrueba(nuevoUsuario, res) {
                 console.log(err);
             } else {	
                 openssl.generateCSR(csroptions, key, 'servidorPass', async function(err, csr, cmd) {
-                    /*console.log('===== CSR OPENSSL FUNCTION =====');
-                    console.log(csr);
-                    console.log('========================================');*/
-                    
-                    //csroptions.days = 365;
                     openssl.selfSignCSR(csr, csroptions, key, 'servidorPass', async function(err, crt, cmd) {
-                        /*console.log('===== CRT OPENSSL FUNCTION =====');
-                        console.log(crt);
-                        console.log('========================================');*/
-                    
-                        //Se guarda en Base de datos Key, csr & crt
-        
-                        //key = key.split('-----BEGIN PRIVATE KEY-----')[1];
-                        //key = key.split('-----END PRIVATE KEY-----')[0];
-                        
-                        //nuevoUsuario.csr = csr;
-                        
                         const existe = await User.find({email: nuevoUsuario.email});
                         if(existe.length == 0){
-                            //Guardamos el archivo con el certificado del usuario
                             var hash = crypto.createHash('sha256').update(nuevoUsuario.email).digest('hex');
                             var pathUsuario = path.join(__dirname,'../../Usuarios_CRT/'+hash);
-                            //console.log(pathUsuario);
                             if (!fs.existsSync(pathUsuario)){
                                 fs.mkdirSync(pathUsuario);
                                 fs.writeFile(pathUsuario+'/'+hash+'.csr', csr, async function (err){
@@ -116,9 +94,7 @@ function obtenerCertificadoPrueba(nuevoUsuario, res) {
                         }else{
                             res.json({status: 0, email: nuevoUsuario.email});
                         }
-                    
                     });
-        
                 });
             }
         });
@@ -141,7 +117,6 @@ router.post('/', async (req, res) => {
         nuevoUsuario.organizacionNombre = organizacionNombre;
         nuevoUsuario.organizacionAbreviado = organizacionAbreviado;
         nuevoUsuario.dominio = dominio;
-
         obtenerCertificadoPrueba(nuevoUsuario,res);
     }
     

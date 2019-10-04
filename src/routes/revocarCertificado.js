@@ -3,18 +3,13 @@ const router = Router();
 const path = require('path');
 var crypto = require('crypto');
 
-//const certificado = require('../sample.json');
-//console.log(certificado);
 const User = require('../models/usuario')
 
-/*Open SSL CERT*/
 const node_openssl = require('node-openssl-cert');
 const openssl = new node_openssl();
 var fs = require('fs');
 
 function obtenerCertificado(nuevoUsuario, res) {
-    //console.log(nuevoUsuario);
-
     var csroptions = {
         hash: 'sha256',
         days: 365,
@@ -74,7 +69,6 @@ function obtenerCertificado(nuevoUsuario, res) {
             if(err) {
                 console.log(err);
             } else {
-                //Verificamos el archivo con el certificado del usuario
                 var hash = crypto.createHash('sha256').update(nuevoUsuario.email).digest('hex');
                 var pathUsuario = path.join(__dirname,'../../Usuarios_CRT/'+hash);
                 if (fs.existsSync(pathUsuario)){
@@ -86,7 +80,6 @@ function obtenerCertificado(nuevoUsuario, res) {
                                         if (err) {
                                             throw err;
                                         }else{
-                                            //Existe usuario 
                                             res.json({status: 1});
                                         }
                                     });
@@ -107,7 +100,6 @@ function obtenerCertificado(nuevoUsuario, res) {
 router.post('/', async (req, res) => {
     const {email, password} = req.body;
     if(email && password){
-        //Generar nuevo certificado y borrarlo
         const existe = await User.find({email: email, password: password});
         var nuevoUsuario = new User();
         nuevoUsuario = existe[0];
