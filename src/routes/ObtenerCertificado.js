@@ -17,11 +17,11 @@ const openssl = require('openssl-nodejs');
     });
 }*/
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res) => { 
     const {email, password} = req.body;
     if(email && password){
         const existe = await User.find({email: email, password: password});
-        if(existe.length > 0){    
+        if(existe.length > 0){ 
             var hash = crypto.createHash('sha256').update(email).digest('hex');
             var pathUsuario = path.join(__dirname,'../../Usuarios_CRT/'+hash);
             if (fs.existsSync(pathUsuario)){

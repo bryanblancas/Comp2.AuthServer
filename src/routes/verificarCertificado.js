@@ -27,8 +27,14 @@ function verificarCertificado(usuario, res) {
     }
 }
 
+router.get('/', async (req, res) => {
+    const usuario = req.query.usuario;
+    console.log(usuario);
+});
+
 router.post('/', async (req, res) => {
     const {usuario} = req.body;
+    console.log(usuario);
     if(usuario){
         usuarioLower = usuario.toLowerCase();
         verificarCertificado(usuarioLower, res);

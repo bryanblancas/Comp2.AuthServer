@@ -6,7 +6,7 @@ const https = require('https');
 const path = require('path');
 
 //Settings
-//app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 //app.set('json spaces', 2);
 var options = {
     key: fs.readFileSync('src/Certificados/llavePrivada_Servidor.key'),
@@ -29,14 +29,14 @@ app.use(express.static(publicDir));
 
 //Routes
 app.use('/api/Aviso',require('./routes/Aviso'));
-app.use('/api/ObtenerCertificadoUsuario',require('./routes/ObtenerCertificado'));
+app.use('/api/ObtenerCertificado',require('./routes/ObtenerCertificado'));
 app.use('/api/revocarCertificado',require('./routes/revocarCertificado'));
 app.use('/api/guardarUsuario',require('./routes/guardarUsuario'));
 app.use('/api/verificarCertificado',require('./routes/verificarCertificado'));
 
 //Starting the Server
-/*app.listen(app.get('port'), () => {
+app.listen(app.get('port'), () => {
     console.log(`Server on port ${app.get('port')}`);
-});*/
+});
 
 https.createServer(options, app).listen(3000);
