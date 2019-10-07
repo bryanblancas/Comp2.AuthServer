@@ -34,6 +34,9 @@ app.use('/api/revocarCertificado',require('./routes/revocarCertificado'));
 app.use('/api/guardarUsuario',require('./routes/guardarUsuario'));
 app.use('/api/verificarCertificado',require('./routes/verificarCertificado'));
 
+// Llenado de datos de certificado
+app.use('/api/Localidades',require('./routes/DatosCertificados/Localidades'));
+
 //Starting the Server
 app.listen(app.get('port'), () => {
     console.log(`Server on port ${app.get('port')}`);
