@@ -1,3 +1,0 @@
-paises = [
-    ['MX','Mexico']
-];

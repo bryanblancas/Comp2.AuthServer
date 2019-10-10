@@ -15,8 +15,6 @@ function verificarCertificado(usuario, res) {
                 crtSinEncabezados = crtSinEscape.split('-----BEGIN CERTIFICATE-----')[1];
                 crtSinEncabezados = crtSinEncabezados.split('-----END CERTIFICATE-----')[0]; 
                 cert = crypto.createHash('sha256').update(crtSinEncabezados).digest('hex').toLowerCase();
-                //console.log('\nCertificado: \n'+ crtSinEncabezados+'\n');
-                //console.log('\nCertificado (Hash): \n'+ cert+'\n'); 
                 res.send(cert);
             }else{
                 res.send('0');
@@ -26,11 +24,6 @@ function verificarCertificado(usuario, res) {
         res.send('0');
     }
 }
-
-/*router.get('/', async (req, res) => {
-    const usuario = req.query.usuario;
-    console.log(usuario);
-});*/
 
 router.post('/', async (req, res) => {
     const {usuario} = req.body;
