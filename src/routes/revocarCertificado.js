@@ -2,49 +2,17 @@ const {Router} = require('express');
 const router = Router();
 const path = require('path');
 var crypto = require('crypto');
+var fs = require('fs');
 
 const User = require('../models/usuario')
 
 const node_openssl = require('node-openssl-cert');
 const openssl = new node_openssl();
-var fs = require('fs');
 
 function obtenerCertificado(nuevoUsuario, res) {
     var csroptions = {
         hash: 'sha256',
         days: 365,
-        extensions: {
-            tlsfeature: ['status_request'],
-            basicConstraints: {
-                critical: true,
-                CA: true,
-                pathlen: 1
-            },
-            keyUsage: {
-                critical: true,
-                usages: [
-                    'digitalSignature',
-                    'keyEncipherment'
-                ]
-            },
-            extendedKeyUsage: {
-                critical: true,
-                usages: [
-                    'serverAuth',
-                    'clientAuth',
-                    'ipsecIKE',
-                    'ipsecUser',
-                    'ipsecTunnel',
-                    'ipsecEndSystem'
-                ]	
-            },
-            SANs: {
-                DNS: [
-                    'dominio',
-                    'www.dominio'
-                ]
-            }
-        },
         subject: {
             countryName: 'MX',
             stateOrProvinceName: 'CDMX',
