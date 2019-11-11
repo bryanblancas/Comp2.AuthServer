@@ -16,7 +16,7 @@ var FTPClient = require('ftp');
 router.post('/', async (req, res) => {
     const {email, password} = req.body;
     if(email && password){
-        const existe = await User.find({email: email, password: password});
+        const existe = await User.find({email: email, password: crypto.createHash('sha256').update(password).digest('hex')});
         var nuevoUsuario = new User();
         nuevoUsuario = existe[0];
         if(nuevoUsuario){

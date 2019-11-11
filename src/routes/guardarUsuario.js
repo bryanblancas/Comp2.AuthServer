@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
     if(email && password){
         const nuevoUsuario = new User();
         nuevoUsuario.email = email;
-        nuevoUsuario.password = password;
+        nuevoUsuario.password = crypto.createHash('sha256').update(password).digest('hex');
         var csroptions = {
             hash: 'sha256',
             days: 365,

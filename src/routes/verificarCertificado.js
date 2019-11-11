@@ -7,10 +7,10 @@ const {IP} = require('./IpClass');
 router.post('/', async (req, res) => {
     const {usuario} = req.body;
     if(usuario){
-        usuarioLower = usuario.toLowerCase();
+        //usuarioLower = usuario.toLowerCase();
         
-        var hash = crypto.createHash('sha256').update(usuarioLower).digest('hex');
-        var pathUsuario = '/Usuarios_CRT/'+hash;
+        //var hash = crypto.createHash('sha256').update(usuarioLower).digest('hex');
+        var pathUsuario = '/Usuarios_CRT/'+usuario;
 
         var c = new FTPClient();
         
@@ -22,8 +22,8 @@ router.post('/', async (req, res) => {
 
         var content = '';
 
-        var ruta = pathUsuario+'/'+hash+'.crt';
-
+        var ruta = pathUsuario+'/'+usuario+'.crt';
+        //console.log(ruta);
         c.on('ready', function() {
             c.get(ruta, function(err, stream) {
                 stream.on('data', function(chunk) {
