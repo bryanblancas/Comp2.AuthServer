@@ -4,17 +4,20 @@ const router = Router();
 const path = require('path');
 var crypto = require('crypto');
 
+const {IP} = require('./IpClass');
+
 const node_openssl = require('node-openssl-cert');
 const openssl = new node_openssl();
 var fs = require('fs');
 
+var FTPClient = require('ftp');
+
 router.post('/', async (req, res) => {
-    const {username, email, password} = req.body;
-    if(username && email && password){
+    const {email, password} = req.body;
+    if(email && password){
         const nuevoUsuario = new User();
-        nuevoUsuario.username = username;
         nuevoUsuario.email = email;
-        nuevoUsuario.password = password;
+        nuevoUsuario.password = crypto.createHash('sha256').update(password).digest('hex');
         var csroptions = {
             hash: 'sha256',
             days: 365,
@@ -49,24 +52,37 @@ router.post('/', async (req, res) => {
                             if(existe.length == 0){
                                 var hash = crypto.createHash('sha256').update(nuevoUsuario.email).digest('hex');
                                 
-                                var pathUsuario = path.join(__dirname,'../../Usuarios_CRT/'+hash);
+                                var pathUsuario = '/Usuarios_CRT/'+hash;
     
-                                if (!fs.existsSync(pathUsuario)){
-                                    fs.mkdirSync(pathUsuario);
-                                    fs.writeFile(pathUsuario+'/'+hash+'.csr', csr, async function (err){
-                                        fs.writeFile(pathUsuario+'/'+hash+'.crt', crt, async function (err) {
-                                            if (err) {
-                                                throw err;
-                                            }else{
-                                                nuevoUsuario.path = pathUsuario;
-                                                await nuevoUsuario.save();
-                                                res.json({status:1, certificado: nuevoUsuario.certificado, email: nuevoUsuario.email});
-                                            }
+                                var c = new FTPClient();
+                                
+                                console.log(IP);
+
+                                c.connect({
+                                    host: IP.dir,
+                                    user: "diegoarturomg",
+                                    password: "211096"
+                                });
+    
+                                var rutaCRT = pathUsuario;
+                                var rutaCSR = pathUsuario;
+                        
+                                c.on('ready', function() {
+                                    c.mkdir(rutaCRT,true, async function (err) {
+                                        c.put(crt, rutaCRT+'/'+hash+'.crt',function(err) {
+                                            if (err) throw err;
                                         });
+                                        c.put(csr, rutaCSR+'/'+hash+'.csr',function(err) {
+                                            if (err) throw err;
+                                        });
+                                        await nuevoUsuario.save();
+                                        res.json({status:1, email: nuevoUsuario.email});
                                     });
-                                }else{
-                                    res.json({status: 0, email: nuevoUsuario.email});
-                                }
+
+                                    
+                                });
+                                
+                                
                             }else{
                                 res.json({status: 0, email: nuevoUsuario.email});
                             }
